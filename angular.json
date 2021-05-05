@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "cli": {
+    "defaultCollection": "@nrwl/angular"
+  },
+  "defaultProject": "cypress-typing",
+  "schematics": {
+    "@nrwl/angular": {
+      "application": {
+        "linter": "eslint"
+      },
+      "library": {
+        "linter": "eslint"
+      },
+      "storybook-configuration": {
+        "linter": "eslint"
+      }
+    },
+    "@nrwl/angular:application": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:component": {
+      "style": "scss"
+    }
+  },
+  "projects": {
+    "cypress-typing": {
+      "projectType": "application",
+      "root": "apps/cypress-typing",
+      "sourceRoot": "apps/cypress-typing/src",
+      "prefix": "cypress-typing-issue",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/cypress-typing",
+            "index": "apps/cypress-typing/src/index.html",
+            "main": "apps/cypress-typing/src/main.ts",
+            "polyfills": "apps/cypress-typing/src/polyfills.ts",
+            "tsConfig": "apps/cypress-typing/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/cypress-typing/src/favicon.ico",
+              "apps/cypress-typing/src/assets"
+            ],
+            "styles": ["apps/cypress-typing/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/cypress-typing/src/environments/environment.ts",
+                  "with": "apps/cypress-typing/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "cypress-typing:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "cypress-typing:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "cypress-typing:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/cypress-typing/src/**/*.ts",
+              "apps/cypress-typing/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/cypress-typing"],
+          "options": {
+            "jestConfig": "apps/cypress-typing/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "cypress-typing-e2e": {
+      "root": "apps/cypress-typing-e2e",
+      "sourceRoot": "apps/cypress-typing-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/cypress-typing-e2e/cypress.json",
+            "tsConfig": "apps/cypress-typing-e2e/tsconfig.e2e.json",
+            "devServerTarget": "cypress-typing:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "cypress-typing:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/cypress-typing-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    }
+  }
+}
